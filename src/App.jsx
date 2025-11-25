@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-// Đã thay thế Cone bằng Filter, RectangleHorizontal bằng CreditCard để tránh lỗi version trên StackBlitz
-import { Star, ArrowLeft, RefreshCw, Check, X, Trophy, Smile, ShieldAlert, Zap, Clock, Palette, Circle, Square, Triangle, Hexagon, Box, Database, Filter, CreditCard } from 'lucide-react';
+// Import thêm Utensils cho game mới
+import { Star, ArrowLeft, RefreshCw, Check, X, Trophy, Smile, ShieldAlert, Zap, Clock, Palette, Circle, Square, Triangle, Hexagon, Box, Database, Filter, CreditCard, Utensils } from 'lucide-react';
 
 // --- Cấu hình dữ liệu trò chơi ---
 
@@ -63,14 +63,23 @@ const shapes3D = [
   { id: 'cone', name: 'Hình Nón', items: ['🍦', '🎉', '🎄', '🥕'], desc: 'Nhọn nhọn như nón sinh nhật' },
 ];
 
-// Dữ liệu Hình Cơ Bản (Game 10 - Mới)
+// Dữ liệu Hình Cơ Bản (Game 10)
 const basicShapesData = [
   { id: 'circle', name: 'Hình Tròn', icon: Circle, color: 'text-red-500' },
   { id: 'square', name: 'Hình Vuông', icon: Square, color: 'text-blue-500' },
   { id: 'triangle', name: 'Hình Tam Giác', icon: Triangle, color: 'text-green-500' },
-  // Dùng CreditCard thay cho RectangleHorizontal vì hình dáng giống hệt
   { id: 'rectangle', name: 'Hình Chữ Nhật', icon: CreditCard, color: 'text-orange-500' },
   { id: 'cylinder', name: 'Hình Trụ', icon: Database, color: 'text-purple-500' },
+];
+
+// Dữ liệu Cho Thú Ăn (Game 11 - Mới)
+const feedingData = [
+  { id: 1, animal: '🐰', food: '🥕', wrong: ['🦴', '🍌', '🐟'], name: 'Bạn Thỏ' },
+  { id: 2, animal: '🐵', food: '🍌', wrong: ['🐟', '🧀', '🥕'], name: 'Bạn Khỉ' },
+  { id: 3, animal: '🐶', food: '🦴', wrong: ['🌿', '🥕', '🍌'], name: 'Bạn Chó' },
+  { id: 4, animal: '🐱', food: '🐟', wrong: ['🍌', '🦴', '🌿'], name: 'Bạn Mèo' },
+  { id: 5, animal: '🐮', food: '🌿', wrong: ['🐟', '🧀', '🦴'], name: 'Bạn Bò' },
+  { id: 6, animal: '🐭', food: '🧀', wrong: ['🌿', '🥕', '🐟'], name: 'Bạn Chuột' },
 ];
 
 // --- Components Con ---
@@ -92,6 +101,7 @@ const Button = ({ onClick, children, className = "", color = "blue" }) => {
     rose: "bg-rose-500 hover:bg-rose-400",
     cyan: "bg-cyan-500 hover:bg-cyan-400",
     lime: "bg-lime-500 hover:bg-lime-400",
+    amber: "bg-amber-500 hover:bg-amber-400",
   };
 
   return (
@@ -112,7 +122,7 @@ const MainMenu = ({ onSelectGame }) => (
       <p className="text-xl text-gray-600 font-medium">Hành trang vào lớp 1</p>
     </div>
 
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 w-full max-w-6xl px-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-7xl px-4">
       <div onClick={() => onSelectGame('math')} className="cursor-pointer group bg-white border-4 border-blue-200 hover:border-blue-400 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2">
         <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-4xl shadow-inner group-hover:scale-110 transition-transform">🔢</div>
         <h2 className="text-lg font-bold text-blue-600">Toán Học Vui</h2>
@@ -158,7 +168,13 @@ const MainMenu = ({ onSelectGame }) => (
         <h2 className="text-lg font-bold text-lime-600">Thế Giới Hình Học</h2>
       </div>
 
-      <div onClick={() => onSelectGame('thief')} className="cursor-pointer group bg-slate-800 border-4 border-yellow-400 hover:border-yellow-300 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2 ring-4 ring-offset-2 ring-slate-800/20">
+      {/* Game 11: Bữa Ăn Vui Vẻ (NEW) */}
+      <div onClick={() => onSelectGame('feeding')} className="cursor-pointer group bg-white border-4 border-amber-200 hover:border-amber-400 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2">
+        <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 shadow-inner group-hover:scale-110 transition-transform"><Utensils size={32} /></div>
+        <h2 className="text-lg font-bold text-amber-600">Bữa Ăn Vui Vẻ</h2>
+      </div>
+
+      <div onClick={() => onSelectGame('thief')} className="cursor-pointer group bg-slate-800 border-4 border-yellow-400 hover:border-yellow-300 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2 ring-4 ring-offset-2 ring-slate-800/20 md:col-span-2 lg:col-span-2">
         <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center text-4xl shadow-inner group-hover:scale-110 transition-transform animate-pulse-slow">🦝</div>
         <h2 className="text-lg font-bold text-yellow-400">Cảnh Sát Tí Hon</h2>
       </div>
@@ -671,16 +687,12 @@ const Shape3DGame = ({ onBack, addScore }) => {
   );
 };
 
-// --- Game 10: Thế Giới Hình Học (NEW) ---
 const BasicShapeGame = ({ onBack, addScore }) => {
   const [level, setLevel] = useState(null);
   const [feedback, setFeedback] = useState(null);
 
   const generateLevel = () => {
-    // Chọn ngẫu nhiên 1 hình làm đề bài
     const target = basicShapesData[Math.floor(Math.random() * basicShapesData.length)];
-    
-    // Tạo danh sách đáp án: Đáp án đúng + 2-3 đáp án sai
     let options = [target];
     while (options.length < 4) {
       const randomItem = basicShapesData[Math.floor(Math.random() * basicShapesData.length)];
@@ -688,10 +700,7 @@ const BasicShapeGame = ({ onBack, addScore }) => {
         options.push(randomItem);
       }
     }
-    
-    // Xáo trộn đáp án
     options = options.sort(() => Math.random() - 0.5);
-
     setLevel({ target, options });
     setFeedback(null);
   };
@@ -757,6 +766,90 @@ const BasicShapeGame = ({ onBack, addScore }) => {
   );
 };
 
+// --- Game 11: Bữa Ăn Vui Vẻ (NEW) ---
+const FeedingGame = ({ onBack, addScore }) => {
+  const [level, setLevel] = useState(null);
+  const [feedback, setFeedback] = useState(null);
+
+  const generateLevel = () => {
+    // Chọn ngẫu nhiên 1 con vật
+    const current = feedingData[Math.floor(Math.random() * feedingData.length)];
+    
+    // Tạo danh sách thức ăn: 1 đúng + 2 sai
+    let options = [current.food];
+    // Lấy 2 món sai ngẫu nhiên từ danh sách wrong của con vật đó
+    const wrongOptions = [...current.wrong].sort(() => 0.5 - Math.random()).slice(0, 2);
+    options = [...options, ...wrongOptions];
+    
+    // Xáo trộn vị trí
+    options = options.sort(() => Math.random() - 0.5);
+
+    setLevel({ current, options });
+    setFeedback(null);
+  };
+
+  useEffect(() => { generateLevel(); }, []);
+
+  const handleAnswer = (food) => {
+    if (feedback) return;
+    if (food === level.current.food) {
+      setFeedback('correct');
+      addScore(10);
+      setTimeout(generateLevel, 1500);
+    } else {
+      setFeedback('wrong');
+      setTimeout(() => setFeedback(null), 1000);
+    }
+  };
+
+  if (!level) return <div>Loading...</div>;
+
+  return (
+    <div className="flex flex-col items-center h-full max-w-2xl mx-auto pt-4 px-4">
+      <div className="flex justify-between w-full items-center mb-6">
+        <Button onClick={onBack} color="amber" className="!py-2 !px-4 text-sm">
+          <ArrowLeft size={20} /> Menu
+        </Button>
+      </div>
+
+      <div className="bg-white rounded-3xl shadow-xl p-8 w-full border-b-8 border-amber-200 flex flex-col items-center relative overflow-hidden">
+        {feedback === 'correct' && (
+           <div className="absolute inset-0 bg-green-100/95 flex items-center justify-center z-20 flex-col animate-bounce-in text-center">
+             <span className="text-6xl mb-2">😋</span>
+             <span className="text-3xl font-bold text-green-600">Ngon quá!</span>
+           </div>
+        )}
+        {feedback === 'wrong' && (
+           <div className="absolute inset-0 bg-red-100/95 flex items-center justify-center z-20 flex-col animate-shake text-center">
+             <span className="text-6xl mb-2">🤢</span>
+             <span className="text-3xl font-bold text-red-600">Không chịu đâu!</span>
+           </div>
+        )}
+
+        <div className="text-center mb-8">
+          <div className="text-9xl mb-4 animate-bounce">{level.current.animal}</div>
+          <h2 className="text-2xl font-bold text-amber-800">
+            {level.current.name} đói bụng quá!
+          </h2>
+          <p className="text-gray-500">Bé hãy chọn món ăn cho bạn ấy nhé</p>
+        </div>
+
+        <div className="grid grid-cols-3 gap-4 w-full">
+          {level.options.map((food, idx) => (
+            <button 
+              key={idx} 
+              onClick={() => handleAnswer(food)} 
+              className="bg-amber-50 border-b-4 border-amber-200 hover:border-amber-300 rounded-2xl p-4 flex items-center justify-center aspect-square shadow-sm transition-all active:scale-95 active:border-b-0 active:translate-y-1"
+            >
+              <span className="text-5xl">{food}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- App Tổng Thể ---
 
 const App = () => {
@@ -795,6 +888,7 @@ const App = () => {
         {currentScreen === 'colorsort' && <ColorSortGame onBack={() => setCurrentScreen('menu')} addScore={addScore} />}
         {currentScreen === 'shape3d' && <Shape3DGame onBack={() => setCurrentScreen('menu')} addScore={addScore} />}
         {currentScreen === 'basicshape' && <BasicShapeGame onBack={() => setCurrentScreen('menu')} addScore={addScore} />}
+        {currentScreen === 'feeding' && <FeedingGame onBack={() => setCurrentScreen('menu')} addScore={addScore} />}
       </main>
 
       <style>{`
