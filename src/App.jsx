@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-// Import thêm Utensils cho game mới
-import { Star, ArrowLeft, RefreshCw, Check, X, Trophy, Smile, ShieldAlert, Zap, Clock, Palette, Circle, Square, Triangle, Hexagon, Box, Database, Filter, CreditCard, Utensils } from 'lucide-react';
+// Import thêm icon Brain cho game mới
+import { Star, ArrowLeft, RefreshCw, Check, X, Trophy, Smile, ShieldAlert, Zap, Clock, Palette, Circle, Square, Triangle, Hexagon, Box, Database, Filter, CreditCard, Utensils, Brain } from 'lucide-react';
 
 // --- Cấu hình dữ liệu trò chơi ---
 
@@ -72,7 +72,7 @@ const basicShapesData = [
   { id: 'cylinder', name: 'Hình Trụ', icon: Database, color: 'text-purple-500' },
 ];
 
-// Dữ liệu Cho Thú Ăn (Game 11 - Mới)
+// Dữ liệu Cho Thú Ăn (Game 11)
 const feedingData = [
   { id: 1, animal: '🐰', food: '🥕', wrong: ['🦴', '🍌', '🐟'], name: 'Bạn Thỏ' },
   { id: 2, animal: '🐵', food: '🍌', wrong: ['🐟', '🧀', '🥕'], name: 'Bạn Khỉ' },
@@ -80,6 +80,16 @@ const feedingData = [
   { id: 4, animal: '🐱', food: '🐟', wrong: ['🍌', '🦴', '🌿'], name: 'Bạn Mèo' },
   { id: 5, animal: '🐮', food: '🌿', wrong: ['🐟', '🧀', '🦴'], name: 'Bạn Bò' },
   { id: 6, animal: '🐭', food: '🧀', wrong: ['🌿', '🥕', '🐟'], name: 'Bạn Chuột' },
+];
+
+// Dữ liệu Tìm Quy Luật (Game 12 - Mới)
+const logicData = [
+  { id: 1, sequence: ['🔴', '🔵', '🔴', '🔵', '🔴'], answer: '🔵', options: ['🔵', '🔴', '🟢'] },
+  { id: 2, sequence: ['🍎', '🍌', '🍎', '🍌', '🍎'], answer: '🍌', options: ['🍇', '🍌', '🍎'] },
+  { id: 3, sequence: ['🐶', '🐱', '🐶', '🐱', '🐶'], answer: '🐱', options: ['🐭', '🐱', '🐶'] },
+  { id: 4, sequence: ['☀️', '☁️', '☀️', '☁️', '☀️'], answer: '☁️', options: ['🌧️', '☁️', '☀️'] },
+  { id: 5, sequence: ['A', 'B', 'A', 'B', 'A'], answer: 'B', options: ['C', 'B', 'A'] },
+  { id: 6, sequence: ['🔺', '🔻', '🔺', '🔻', '🔺'], answer: '🔻', options: ['🟦', '🔻', '🔺'] },
 ];
 
 // --- Components Con ---
@@ -102,6 +112,7 @@ const Button = ({ onClick, children, className = "", color = "blue" }) => {
     cyan: "bg-cyan-500 hover:bg-cyan-400",
     lime: "bg-lime-500 hover:bg-lime-400",
     amber: "bg-amber-500 hover:bg-amber-400",
+    fuchsia: "bg-fuchsia-500 hover:bg-fuchsia-400",
   };
 
   return (
@@ -168,13 +179,18 @@ const MainMenu = ({ onSelectGame }) => (
         <h2 className="text-lg font-bold text-lime-600">Thế Giới Hình Học</h2>
       </div>
 
-      {/* Game 11: Bữa Ăn Vui Vẻ (NEW) */}
       <div onClick={() => onSelectGame('feeding')} className="cursor-pointer group bg-white border-4 border-amber-200 hover:border-amber-400 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2">
         <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 shadow-inner group-hover:scale-110 transition-transform"><Utensils size={32} /></div>
         <h2 className="text-lg font-bold text-amber-600">Bữa Ăn Vui Vẻ</h2>
       </div>
 
-      <div onClick={() => onSelectGame('thief')} className="cursor-pointer group bg-slate-800 border-4 border-yellow-400 hover:border-yellow-300 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2 ring-4 ring-offset-2 ring-slate-800/20 md:col-span-2 lg:col-span-2">
+      {/* Game 12: Tìm Quy Luật (NEW) */}
+      <div onClick={() => onSelectGame('logic')} className="cursor-pointer group bg-white border-4 border-fuchsia-200 hover:border-fuchsia-400 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2">
+        <div className="w-16 h-16 bg-fuchsia-100 rounded-full flex items-center justify-center text-fuchsia-600 shadow-inner group-hover:scale-110 transition-transform"><Brain size={32} /></div>
+        <h2 className="text-lg font-bold text-fuchsia-600">Tìm Quy Luật</h2>
+      </div>
+
+      <div onClick={() => onSelectGame('thief')} className="cursor-pointer group bg-slate-800 border-4 border-yellow-400 hover:border-yellow-300 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2 ring-4 ring-offset-2 ring-slate-800/20">
         <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center text-4xl shadow-inner group-hover:scale-110 transition-transform animate-pulse-slow">🦝</div>
         <h2 className="text-lg font-bold text-yellow-400">Cảnh Sát Tí Hon</h2>
       </div>
@@ -766,7 +782,7 @@ const BasicShapeGame = ({ onBack, addScore }) => {
   );
 };
 
-// --- Game 11: Bữa Ăn Vui Vẻ (NEW) ---
+// --- Game 11: Bữa Ăn Vui Vẻ ---
 const FeedingGame = ({ onBack, addScore }) => {
   const [level, setLevel] = useState(null);
   const [feedback, setFeedback] = useState(null);
@@ -850,6 +866,82 @@ const FeedingGame = ({ onBack, addScore }) => {
   );
 };
 
+// --- Game 12: Tìm Quy Luật (NEW) ---
+const LogicGame = ({ onBack, addScore }) => {
+  const [level, setLevel] = useState(null);
+  const [feedback, setFeedback] = useState(null);
+
+  const generateLevel = () => {
+    const current = logicData[Math.floor(Math.random() * logicData.length)];
+    setLevel(current);
+    setFeedback(null);
+  };
+
+  useEffect(() => { generateLevel(); }, []);
+
+  const handleAnswer = (ans) => {
+    if (feedback) return;
+    if (ans === level.answer) {
+      setFeedback('correct');
+      addScore(10);
+      setTimeout(generateLevel, 1500);
+    } else {
+      setFeedback('wrong');
+      setTimeout(() => setFeedback(null), 1000);
+    }
+  };
+
+  if (!level) return <div>Loading...</div>;
+
+  return (
+    <div className="flex flex-col items-center h-full max-w-2xl mx-auto pt-4 px-4">
+      <div className="flex justify-between w-full items-center mb-6">
+        <Button onClick={onBack} color="fuchsia" className="!py-2 !px-4 text-sm">
+          <ArrowLeft size={20} /> Menu
+        </Button>
+      </div>
+
+      <div className="bg-white rounded-3xl shadow-xl p-8 w-full border-b-8 border-fuchsia-200 flex flex-col items-center relative overflow-hidden">
+        {feedback === 'correct' && (
+           <div className="absolute inset-0 bg-green-100/95 flex items-center justify-center z-20 flex-col animate-bounce-in text-center">
+             <Check size={80} className="text-green-500 mb-4" />
+             <span className="text-3xl font-bold text-green-600">Thông minh quá!</span>
+           </div>
+        )}
+        {feedback === 'wrong' && (
+           <div className="absolute inset-0 bg-red-100/95 flex items-center justify-center z-20 flex-col animate-shake text-center">
+             <X size={80} className="text-red-500 mb-4" />
+             <span className="text-3xl font-bold text-red-600">Thử lại nào!</span>
+           </div>
+        )}
+
+        <h2 className="text-xl font-bold text-fuchsia-800 mb-6 text-center">Hình tiếp theo là gì nhỉ?</h2>
+
+        <div className="flex justify-center gap-2 mb-8 bg-fuchsia-50 p-4 rounded-2xl w-full overflow-x-auto">
+          {level.sequence.map((item, idx) => (
+            <div key={idx} className="text-4xl w-12 h-12 flex items-center justify-center bg-white rounded-lg shadow-sm border border-fuchsia-100">
+              {item}
+            </div>
+          ))}
+          <div className="text-4xl w-12 h-12 flex items-center justify-center bg-fuchsia-200 rounded-lg shadow-inner text-fuchsia-500 font-bold">?</div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-4 w-full">
+          {level.options.map((opt, idx) => (
+            <button 
+              key={idx} 
+              onClick={() => handleAnswer(opt)} 
+              className="bg-fuchsia-50 border-b-4 border-fuchsia-200 hover:border-fuchsia-300 rounded-2xl p-4 flex items-center justify-center aspect-square shadow-sm transition-all active:scale-95 active:border-b-0 active:translate-y-1"
+            >
+              <span className="text-4xl">{opt}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- App Tổng Thể ---
 
 const App = () => {
@@ -889,6 +981,7 @@ const App = () => {
         {currentScreen === 'shape3d' && <Shape3DGame onBack={() => setCurrentScreen('menu')} addScore={addScore} />}
         {currentScreen === 'basicshape' && <BasicShapeGame onBack={() => setCurrentScreen('menu')} addScore={addScore} />}
         {currentScreen === 'feeding' && <FeedingGame onBack={() => setCurrentScreen('menu')} addScore={addScore} />}
+        {currentScreen === 'logic' && <LogicGame onBack={() => setCurrentScreen('menu')} addScore={addScore} />}
       </main>
 
       <style>{`
