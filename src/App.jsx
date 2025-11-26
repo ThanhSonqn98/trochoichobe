@@ -1,6 +1,68 @@
 import React, { useState, useEffect, useRef } from 'react';
-// Import thêm icon Brain cho game mới
-import { Star, ArrowLeft, RefreshCw, Check, X, Trophy, Smile, ShieldAlert, Zap, Clock, Palette, Circle, Square, Triangle, Hexagon, Box, Database, Filter, CreditCard, Utensils, Brain } from 'lucide-react';
+// Import các icon
+import { Star, ArrowLeft, RefreshCw, Check, X, Trophy, Smile, ShieldAlert, Zap, Clock, Palette, Circle, Square, Triangle, Hexagon, Box, Database, Filter, CreditCard, Utensils, Brain, Volume2, VolumeX } from 'lucide-react';
+
+// --- HỆ THỐNG ÂM THANH (Web Audio API - Không cần file ngoài) ---
+const audioCtx = typeof window !== 'undefined' ? new (window.AudioContext || window.webkitAudioContext)() : null;
+
+const playSound = (type) => {
+  if (!audioCtx) return;
+  // Resume context nếu bị browser chặn (chỉ chạy lần đầu click)
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+
+  const osc = audioCtx.createOscillator();
+  const gainNode = audioCtx.createGain();
+
+  osc.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+
+  const now = audioCtx.currentTime;
+
+  if (type === 'correct') {
+    // Tiếng Ting Ting (Cao, vui)
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(500, now);
+    osc.frequency.exponentialRampToValueAtTime(1000, now + 0.1);
+    gainNode.gain.setValueAtTime(0.1, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+    osc.start(now);
+    osc.stop(now + 0.5);
+    
+    // Hiệu ứng phụ cho tiếng vang hơn
+    setTimeout(() => {
+        const osc2 = audioCtx.createOscillator();
+        const gain2 = audioCtx.createGain();
+        osc2.connect(gain2);
+        gain2.connect(audioCtx.destination);
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(800, audioCtx.currentTime);
+        osc2.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
+        gain2.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+        osc2.start(audioCtx.currentTime);
+        osc2.stop(audioCtx.currentTime + 0.3);
+    }, 100);
+
+  } else if (type === 'wrong') {
+    // Tiếng Bụp (Trầm, báo sai nhẹ nhàng)
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(150, now);
+    osc.frequency.linearRampToValueAtTime(100, now + 0.2);
+    gainNode.gain.setValueAtTime(0.1, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+    osc.start(now);
+    osc.stop(now + 0.3);
+
+  } else if (type === 'click') {
+    // Tiếng Click (Nhẹ)
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(800, now);
+    gainNode.gain.setValueAtTime(0.02, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+    osc.start(now);
+    osc.stop(now + 0.05);
+  }
+};
 
 // --- Cấu hình dữ liệu trò chơi ---
 
@@ -29,7 +91,7 @@ const shadowData = [
   { id: 6, img: '🦕', name: 'Khủng Long' },
 ];
 
-// Dữ liệu Màu sắc & Hình khối (Cơ bản - Game 7)
+// Dữ liệu Màu sắc & Hình khối
 const shapeConfig = [
   { id: 'circle', name: 'Hình Tròn', icon: Circle },
   { id: 'square', name: 'Hình Vuông', icon: Square },
@@ -47,7 +109,7 @@ const colorConfig = [
   { id: 'orange', name: 'Màu Cam', class: 'text-orange-500 fill-orange-500', hex: '#f97316' },
 ];
 
-// Dữ liệu Phân loại Màu sắc (Game 8)
+// Dữ liệu Phân loại Màu sắc
 const sortingItems = [
   { item: '🍎', colorId: 'red' }, { item: '🍓', colorId: 'red' }, { item: '🌹', colorId: 'red' }, { item: '🚒', colorId: 'red' },
   { item: '🐳', colorId: 'blue' }, { item: '🧢', colorId: 'blue' }, { item: '🚙', colorId: 'blue' }, { item: '💎', colorId: 'blue' },
@@ -55,7 +117,7 @@ const sortingItems = [
   { item: '🌻', colorId: 'yellow' }, { item: '🍌', colorId: 'yellow' }, { item: '🍋', colorId: 'yellow' }, { item: '🐤', colorId: 'yellow' },
 ];
 
-// Dữ liệu Hình khối 3D (Game 9)
+// Dữ liệu Hình khối 3D
 const shapes3D = [
   { id: 'sphere', name: 'Hình Cầu', items: ['⚽', '🏀', '🍊', '🌍', '🎱'], desc: 'Tròn vo như quả bóng' },
   { id: 'cube', name: 'Hình Lập Phương', items: ['📦', '🎁', '🎲', '🧊', '🟫'], desc: 'Vuông vắn như hộp quà' },
@@ -63,7 +125,7 @@ const shapes3D = [
   { id: 'cone', name: 'Hình Nón', items: ['🍦', '🎉', '🎄', '🥕'], desc: 'Nhọn nhọn như nón sinh nhật' },
 ];
 
-// Dữ liệu Hình Cơ Bản (Game 10)
+// Dữ liệu Hình Cơ Bản
 const basicShapesData = [
   { id: 'circle', name: 'Hình Tròn', icon: Circle, color: 'text-red-500' },
   { id: 'square', name: 'Hình Vuông', icon: Square, color: 'text-blue-500' },
@@ -72,7 +134,7 @@ const basicShapesData = [
   { id: 'cylinder', name: 'Hình Trụ', icon: Database, color: 'text-purple-500' },
 ];
 
-// Dữ liệu Cho Thú Ăn (Game 11)
+// Dữ liệu Cho Thú Ăn
 const feedingData = [
   { id: 1, animal: '🐰', food: '🥕', wrong: ['🦴', '🍌', '🐟'], name: 'Bạn Thỏ' },
   { id: 2, animal: '🐵', food: '🍌', wrong: ['🐟', '🧀', '🥕'], name: 'Bạn Khỉ' },
@@ -82,7 +144,7 @@ const feedingData = [
   { id: 6, animal: '🐭', food: '🧀', wrong: ['🌿', '🥕', '🐟'], name: 'Bạn Chuột' },
 ];
 
-// Dữ liệu Tìm Quy Luật (Game 12 - Mới)
+// Dữ liệu Tìm Quy Luật
 const logicData = [
   { id: 1, sequence: ['🔴', '🔵', '🔴', '🔵', '🔴'], answer: '🔵', options: ['🔵', '🔴', '🟢'] },
   { id: 2, sequence: ['🍎', '🍌', '🍎', '🍌', '🍎'], answer: '🍌', options: ['🍇', '🍌', '🍎'] },
@@ -115,8 +177,13 @@ const Button = ({ onClick, children, className = "", color = "blue" }) => {
     fuchsia: "bg-fuchsia-500 hover:bg-fuchsia-400",
   };
 
+  const handleClick = (e) => {
+    playSound('click');
+    if (onClick) onClick(e);
+  };
+
   return (
-    <button onClick={onClick} className={`${baseStyle} ${colors[color]} ${className}`}>
+    <button onClick={handleClick} className={`${baseStyle} ${colors[color]} ${className}`}>
       {children}
     </button>
   );
@@ -134,63 +201,32 @@ const MainMenu = ({ onSelectGame }) => (
     </div>
 
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-7xl px-4">
-      <div onClick={() => onSelectGame('math')} className="cursor-pointer group bg-white border-4 border-blue-200 hover:border-blue-400 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2">
-        <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-4xl shadow-inner group-hover:scale-110 transition-transform">🔢</div>
-        <h2 className="text-lg font-bold text-blue-600">Toán Học Vui</h2>
-      </div>
+      {[
+        { id: 'math', icon: '🔢', title: 'Toán Học Vui', color: 'blue' },
+        { id: 'vietnamese', icon: 'abc', title: 'Tiếng Việt', color: 'green' },
+        { id: 'memory', icon: '🧩', title: 'Trí Nhớ', color: 'orange' },
+        { id: 'comparison', icon: '⚖️', title: 'So Sánh', color: 'pink' },
+        { id: 'shadow', icon: '🔦', title: 'Tìm Bóng', color: 'teal' },
+        { id: 'colorshape', icon: <Palette size={32}/>, title: 'Họa Sĩ Nhí', color: 'rose' },
+        { id: 'colorsort', icon: '🎨', title: 'Phân Loại Màu', color: 'indigo' },
+        { id: 'shape3d', icon: <Box size={32}/>, title: 'Hình Khối 3D', color: 'cyan' },
+        { id: 'basicshape', icon: <Square size={32}/>, title: 'Thế Giới Hình Học', color: 'lime' },
+        { id: 'feeding', icon: <Utensils size={32}/>, title: 'Bữa Ăn Vui Vẻ', color: 'amber' },
+        { id: 'logic', icon: <Brain size={32}/>, title: 'Tìm Quy Luật', color: 'fuchsia' },
+      ].map(game => (
+        <div 
+          key={game.id}
+          onClick={() => { playSound('click'); onSelectGame(game.id); }}
+          className={`cursor-pointer group bg-white border-4 border-${game.color}-200 hover:border-${game.color}-400 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2`}
+        >
+          <div className={`w-16 h-16 bg-${game.color}-100 rounded-full flex items-center justify-center text-4xl shadow-inner group-hover:scale-110 transition-transform text-${game.color}-600`}>
+            {game.icon}
+          </div>
+          <h2 className={`text-lg font-bold text-${game.color}-600 text-center`}>{game.title}</h2>
+        </div>
+      ))}
 
-      <div onClick={() => onSelectGame('vietnamese')} className="cursor-pointer group bg-white border-4 border-green-200 hover:border-green-400 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2">
-        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-4xl shadow-inner group-hover:scale-110 transition-transform">abc</div>
-        <h2 className="text-lg font-bold text-green-600">Tiếng Việt</h2>
-      </div>
-
-      <div onClick={() => onSelectGame('memory')} className="cursor-pointer group bg-white border-4 border-orange-200 hover:border-orange-400 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2">
-        <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center text-4xl shadow-inner group-hover:scale-110 transition-transform">🧩</div>
-        <h2 className="text-lg font-bold text-orange-600">Trí Nhớ</h2>
-      </div>
-
-      <div onClick={() => onSelectGame('comparison')} className="cursor-pointer group bg-white border-4 border-pink-200 hover:border-pink-400 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2">
-        <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center text-4xl shadow-inner group-hover:scale-110 transition-transform">⚖️</div>
-        <h2 className="text-lg font-bold text-pink-600">So Sánh</h2>
-      </div>
-
-      <div onClick={() => onSelectGame('shadow')} className="cursor-pointer group bg-white border-4 border-teal-200 hover:border-teal-400 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2">
-        <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center text-4xl shadow-inner group-hover:scale-110 transition-transform">🔦</div>
-        <h2 className="text-lg font-bold text-teal-600">Tìm Bóng</h2>
-      </div>
-
-      <div onClick={() => onSelectGame('colorshape')} className="cursor-pointer group bg-white border-4 border-rose-200 hover:border-rose-400 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2">
-        <div className="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center text-rose-500 shadow-inner group-hover:scale-110 transition-transform"><Palette size={32} /></div>
-        <h2 className="text-lg font-bold text-rose-600">Họa Sĩ Nhí</h2>
-      </div>
-
-      <div onClick={() => onSelectGame('colorsort')} className="cursor-pointer group bg-white border-4 border-indigo-200 hover:border-indigo-400 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2">
-        <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center text-4xl shadow-inner group-hover:scale-110 transition-transform">🎨</div>
-        <h2 className="text-lg font-bold text-indigo-600">Phân Loại Màu</h2>
-      </div>
-
-      <div onClick={() => onSelectGame('shape3d')} className="cursor-pointer group bg-white border-4 border-cyan-200 hover:border-cyan-400 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2">
-        <div className="w-16 h-16 bg-cyan-100 rounded-full flex items-center justify-center text-cyan-600 shadow-inner group-hover:scale-110 transition-transform"><Box size={32} /></div>
-        <h2 className="text-lg font-bold text-cyan-600">Hình Khối 3D</h2>
-      </div>
-
-      <div onClick={() => onSelectGame('basicshape')} className="cursor-pointer group bg-white border-4 border-lime-200 hover:border-lime-400 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2">
-        <div className="w-16 h-16 bg-lime-100 rounded-full flex items-center justify-center text-lime-600 shadow-inner group-hover:scale-110 transition-transform"><Square size={32} /></div>
-        <h2 className="text-lg font-bold text-lime-600">Thế Giới Hình Học</h2>
-      </div>
-
-      <div onClick={() => onSelectGame('feeding')} className="cursor-pointer group bg-white border-4 border-amber-200 hover:border-amber-400 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2">
-        <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 shadow-inner group-hover:scale-110 transition-transform"><Utensils size={32} /></div>
-        <h2 className="text-lg font-bold text-amber-600">Bữa Ăn Vui Vẻ</h2>
-      </div>
-
-      {/* Game 12: Tìm Quy Luật (NEW) */}
-      <div onClick={() => onSelectGame('logic')} className="cursor-pointer group bg-white border-4 border-fuchsia-200 hover:border-fuchsia-400 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2">
-        <div className="w-16 h-16 bg-fuchsia-100 rounded-full flex items-center justify-center text-fuchsia-600 shadow-inner group-hover:scale-110 transition-transform"><Brain size={32} /></div>
-        <h2 className="text-lg font-bold text-fuchsia-600">Tìm Quy Luật</h2>
-      </div>
-
-      <div onClick={() => onSelectGame('thief')} className="cursor-pointer group bg-slate-800 border-4 border-yellow-400 hover:border-yellow-300 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2 ring-4 ring-offset-2 ring-slate-800/20">
+      <div onClick={() => { playSound('click'); onSelectGame('thief'); }} className="cursor-pointer group bg-slate-800 border-4 border-yellow-400 hover:border-yellow-300 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-xl transition-all hover:-translate-y-2 ring-4 ring-offset-2 ring-slate-800/20">
         <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center text-4xl shadow-inner group-hover:scale-110 transition-transform animate-pulse-slow">🦝</div>
         <h2 className="text-lg font-bold text-yellow-400">Cảnh Sát Tí Hon</h2>
       </div>
@@ -225,8 +261,10 @@ const MathGame = ({ onBack, addScore }) => {
   const handleAnswer = (ans) => {
     if (feedback) return;
     if (ans === question.result) {
+      playSound('correct');
       setFeedback('correct'); addScore(10); setStreak(s => s + 1); setTimeout(generateQuestion, 1500);
     } else {
+      playSound('wrong');
       setFeedback('wrong'); setStreak(0); setTimeout(() => setFeedback(null), 1000);
     }
   };
@@ -260,8 +298,12 @@ const VietnameseGame = ({ onBack, addScore }) => {
   const handleAnswer = (opt) => {
     if (feedback) return;
     if (opt === currentQ.answer) {
+      playSound('correct');
       setFeedback('correct'); addScore(10); setTimeout(() => { setFeedback(null); setCurrentIdx((prev) => (prev + 1) % vietnameseData.length); }, 1500);
-    } else { setFeedback('wrong'); setTimeout(() => setFeedback(null), 1000); }
+    } else { 
+      playSound('wrong');
+      setFeedback('wrong'); setTimeout(() => setFeedback(null), 1000); 
+    }
   };
   return (
     <div className="flex flex-col items-center h-full max-w-2xl mx-auto pt-4 px-4">
@@ -293,14 +335,19 @@ const MemoryGame = ({ onBack, addScore }) => {
   };
   const handleClick = (id) => {
     if (disabled || flipped.includes(id) || matched.includes(id)) return;
+    playSound('click');
     const newFlipped = [...flipped, id];
     setFlipped(newFlipped);
     if (newFlipped.length === 2) {
       setDisabled(true);
       const [firstId, secondId] = newFlipped;
       if (cards.find(c => c.id === firstId).icon === cards.find(c => c.id === secondId).icon) {
+        playSound('correct');
         setMatched(prev => [...prev, firstId, secondId]); setFlipped([]); setDisabled(false); addScore(20);
-      } else { setTimeout(() => { setFlipped([]); setDisabled(false); }, 1000); }
+      } else { 
+        // Không đúng thì không kêu hoặc kêu nhẹ
+        setTimeout(() => { setFlipped([]); setDisabled(false); }, 1000); 
+      }
     }
   };
   const isWin = matched.length === cards.length && cards.length > 0;
@@ -328,7 +375,13 @@ const ComparisonGame = ({ onBack, addScore }) => {
     if (feedback) return;
     const { a, b } = data; let correct = false;
     if (operator === '>' && a > b) correct = true; if (operator === '<' && a < b) correct = true; if (operator === '=' && a === b) correct = true;
-    if (correct) { setFeedback('correct'); addScore(10); setTimeout(generateLevel, 1500); } else { setFeedback('wrong'); setTimeout(() => setFeedback(null), 1000); }
+    if (correct) { 
+      playSound('correct');
+      setFeedback('correct'); addScore(10); setTimeout(generateLevel, 1500); 
+    } else { 
+      playSound('wrong');
+      setFeedback('wrong'); setTimeout(() => setFeedback(null), 1000); 
+    }
   };
   if (!data) return <div>Loading...</div>;
   return (
@@ -367,8 +420,12 @@ const ShadowGame = ({ onBack, addScore }) => {
   const handleAnswer = (item) => {
     if (feedback) return;
     if (item.id === currentLevel.target.id) {
+      playSound('correct');
       setFeedback('correct'); addScore(10); setTimeout(generateLevel, 1500);
-    } else { setFeedback('wrong'); setTimeout(() => setFeedback(null), 1000); }
+    } else { 
+      playSound('wrong');
+      setFeedback('wrong'); setTimeout(() => setFeedback(null), 1000); 
+    }
   };
   if (!currentLevel) return <div>Loading...</div>;
   return (
@@ -396,6 +453,7 @@ const ThiefGame = ({ onBack, addScore }) => {
   const gameLoopRef = useRef(null);
 
   const startGame = () => {
+    playSound('click');
     setIsPlaying(true);
     setScore(0);
     setTimeLeft(30);
@@ -447,9 +505,11 @@ const ThiefGame = ({ onBack, addScore }) => {
   const handleTap = (index, type) => {
     if (!isPlaying || !type) return;
     if (type === 'thief') {
+      playSound('correct');
       setScore(s => s + 10);
       setGrid(prev => { const next = [...prev]; next[index] = 'caught'; return next; });
     } else if (type === 'police' || type === 'civilian') {
+      playSound('wrong');
       setScore(s => Math.max(0, s - 5)); 
       setGrid(prev => { const next = [...prev]; next[index] = 'wrong'; return next; });
     }
@@ -528,8 +588,12 @@ const ColorShapeGame = ({ onBack, addScore }) => {
   const handleAnswer = (option) => {
     if (feedback) return;
     if (option.id === 'correct') {
+      playSound('correct');
       setFeedback('correct'); addScore(10); setTimeout(generateLevel, 1500);
-    } else { setFeedback('wrong'); setTimeout(() => setFeedback(null), 1000); }
+    } else { 
+      playSound('wrong');
+      setFeedback('wrong'); setTimeout(() => setFeedback(null), 1000); 
+    }
   };
   if (!level) return <div>Loading...</div>;
   return (
@@ -562,10 +626,12 @@ const ColorSortGame = ({ onBack, addScore }) => {
   const handleBucketClick = (colorId) => {
     if (feedback) return;
     if (colorId === currentItem.colorId) {
+      playSound('correct');
       setFeedback('correct');
       addScore(10);
       setTimeout(generateLevel, 1500);
     } else {
+      playSound('wrong');
       setFeedback('wrong');
       setTimeout(() => setFeedback(null), 1000);
     }
@@ -640,10 +706,12 @@ const Shape3DGame = ({ onBack, addScore }) => {
   const handleAnswer = (shapeId) => {
     if (feedback) return;
     if (shapeId === currentLevel.correctShape.id) {
+      playSound('correct');
       setFeedback('correct');
       addScore(10);
       setTimeout(generateLevel, 1500);
     } else {
+      playSound('wrong');
       setFeedback('wrong');
       setTimeout(() => setFeedback(null), 1000);
     }
@@ -654,7 +722,6 @@ const Shape3DGame = ({ onBack, addScore }) => {
       case 'sphere': return <Circle size={40} className="text-orange-500 fill-orange-200" />;
       case 'cube': return <Box size={40} className="text-blue-500 fill-blue-200" />;
       case 'cylinder': return <Database size={40} className="text-green-500 fill-green-200" />;
-      // Use Filter icon for Cone since Cone might not be available in older lucide versions
       case 'cone': return <Filter size={40} className="text-purple-500 fill-purple-200" />;
       default: return <Box />;
     }
@@ -726,10 +793,12 @@ const BasicShapeGame = ({ onBack, addScore }) => {
   const handleAnswer = (item) => {
     if (feedback) return;
     if (item.id === level.target.id) {
+      playSound('correct');
       setFeedback('correct');
       addScore(10);
       setTimeout(generateLevel, 1500);
     } else {
+      playSound('wrong');
       setFeedback('wrong');
       setTimeout(() => setFeedback(null), 1000);
     }
@@ -782,24 +851,16 @@ const BasicShapeGame = ({ onBack, addScore }) => {
   );
 };
 
-// --- Game 11: Bữa Ăn Vui Vẻ ---
 const FeedingGame = ({ onBack, addScore }) => {
   const [level, setLevel] = useState(null);
   const [feedback, setFeedback] = useState(null);
 
   const generateLevel = () => {
-    // Chọn ngẫu nhiên 1 con vật
     const current = feedingData[Math.floor(Math.random() * feedingData.length)];
-    
-    // Tạo danh sách thức ăn: 1 đúng + 2 sai
     let options = [current.food];
-    // Lấy 2 món sai ngẫu nhiên từ danh sách wrong của con vật đó
     const wrongOptions = [...current.wrong].sort(() => 0.5 - Math.random()).slice(0, 2);
     options = [...options, ...wrongOptions];
-    
-    // Xáo trộn vị trí
     options = options.sort(() => Math.random() - 0.5);
-
     setLevel({ current, options });
     setFeedback(null);
   };
@@ -809,10 +870,12 @@ const FeedingGame = ({ onBack, addScore }) => {
   const handleAnswer = (food) => {
     if (feedback) return;
     if (food === level.current.food) {
+      playSound('correct');
       setFeedback('correct');
       addScore(10);
       setTimeout(generateLevel, 1500);
     } else {
+      playSound('wrong');
       setFeedback('wrong');
       setTimeout(() => setFeedback(null), 1000);
     }
@@ -866,7 +929,6 @@ const FeedingGame = ({ onBack, addScore }) => {
   );
 };
 
-// --- Game 12: Tìm Quy Luật (NEW) ---
 const LogicGame = ({ onBack, addScore }) => {
   const [level, setLevel] = useState(null);
   const [feedback, setFeedback] = useState(null);
@@ -882,10 +944,12 @@ const LogicGame = ({ onBack, addScore }) => {
   const handleAnswer = (ans) => {
     if (feedback) return;
     if (ans === level.answer) {
+      playSound('correct');
       setFeedback('correct');
       addScore(10);
       setTimeout(generateLevel, 1500);
     } else {
+      playSound('wrong');
       setFeedback('wrong');
       setTimeout(() => setFeedback(null), 1000);
     }
