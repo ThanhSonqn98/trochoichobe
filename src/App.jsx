@@ -71,16 +71,16 @@ const Fireworks = () => {
   return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-50" />;
 };
 
-// --- DỮ LIỆU (Giữ nguyên) ---
+// --- DỮ LIỆU (Đã cập nhật thêm option thứ 4) ---
 const vietnameseData = [
-  { id: 1, word: 'C_n Mèo', answer: 'o', options: ['a', 'o', 'e'], image: '🐱', full: 'Con Mèo' },
-  { id: 2, word: 'Cái _ế', answer: 'Gh', options: ['Gh', 'G', 'K'], image: '🪑', full: 'Cái Ghế' },
-  { id: 3, word: 'Quả _áo', answer: 'T', options: ['C', 'T', 'D'], image: '🍎', full: 'Quả Táo' },
-  { id: 4, word: 'Con _à', answer: 'G', options: ['G', 'C', 'K'], image: '🐔', full: 'Con Gà' },
-  { id: 5, word: 'Bông _oa', answer: 'H', options: ['H', 'K', 'M'], image: '🌸', full: 'Bông Hoa' },
-  { id: 6, word: 'Ông _ặt Trời', answer: 'M', options: ['N', 'M', 'L'], image: '☀️', full: 'Ông Mặt Trời' },
-  { id: 7, word: 'Con _á', answer: 'C', options: ['K', 'C', 'T'], image: '🐟', full: 'Con Cá' },
-  { id: 8, word: 'Xe _ạp', answer: 'Đ', options: ['Đ', 'D', 'B'], image: '🚲', full: 'Xe Đạp' },
+  { id: 1, word: 'C_n Mèo', answer: 'o', options: ['a', 'o', 'e', 'u'], image: '🐱', full: 'Con Mèo' },
+  { id: 2, word: 'Cái _ế', answer: 'Gh', options: ['Gh', 'G', 'K', 'Kh'], image: '🪑', full: 'Cái Ghế' },
+  { id: 3, word: 'Quả _áo', answer: 'T', options: ['C', 'T', 'D', 'Đ'], image: '🍎', full: 'Quả Táo' },
+  { id: 4, word: 'Con _à', answer: 'G', options: ['G', 'C', 'K', 'Gh'], image: '🐔', full: 'Con Gà' },
+  { id: 5, word: 'Bông _oa', answer: 'H', options: ['H', 'K', 'M', 'N'], image: '🌸', full: 'Bông Hoa' },
+  { id: 6, word: 'Ông _ặt Trời', answer: 'M', options: ['N', 'M', 'L', 'H'], image: '☀️', full: 'Ông Mặt Trời' },
+  { id: 7, word: 'Con _á', answer: 'C', options: ['K', 'C', 'T', 'Ch'], image: '🐟', full: 'Con Cá' },
+  { id: 8, word: 'Xe _ạp', answer: 'Đ', options: ['Đ', 'D', 'B', 'V'], image: '🚲', full: 'Xe Đạp' },
 ];
 const memoryIcons = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'];
 const shadowData = [
@@ -121,20 +121,20 @@ const basicShapesData = [
   { id: 'cylinder', name: 'Hình Trụ', icon: Database, color: 'text-purple-500' },
 ];
 const feedingData = [
-  { id: 1, animal: '🐰', food: '🥕', wrong: ['🦴', '🍌', '🐟'], name: 'Bạn Thỏ' },
-  { id: 2, animal: '🐵', food: '🍌', wrong: ['🐟', '🧀', '🥕'], name: 'Bạn Khỉ' },
-  { id: 3, animal: '🐶', food: '🦴', wrong: ['🌿', '🥕', '🍌'], name: 'Bạn Chó' },
-  { id: 4, animal: '🐱', food: '🐟', wrong: ['🍌', '🦴', '🌿'], name: 'Bạn Mèo' },
-  { id: 5, animal: '🐮', food: '🌿', wrong: ['🐟', '🧀', '🦴'], name: 'Bạn Bò' },
-  { id: 6, animal: '🐭', food: '🧀', wrong: ['🌿', '🥕', '🐟'], name: 'Bạn Chuột' },
+  { id: 1, animal: '🐰', food: '🥕', wrong: ['🦴', '🍌', '🐟', '🌿'], name: 'Bạn Thỏ' },
+  { id: 2, animal: '🐵', food: '🍌', wrong: ['🐟', '🧀', '🥕', '🦴'], name: 'Bạn Khỉ' },
+  { id: 3, animal: '🐶', food: '🦴', wrong: ['🌿', '🥕', '🍌', '🧀'], name: 'Bạn Chó' },
+  { id: 4, animal: '🐱', food: '🐟', wrong: ['🍌', '🦴', '🌿', '🥕'], name: 'Bạn Mèo' },
+  { id: 5, animal: '🐮', food: '🌿', wrong: ['🐟', '🧀', '🦴', '🍌'], name: 'Bạn Bò' },
+  { id: 6, animal: '🐭', food: '🧀', wrong: ['🌿', '🥕', '🐟', '🦴'], name: 'Bạn Chuột' },
 ];
 const logicData = [
-  { id: 1, sequence: ['🔴', '🔵', '🔴', '🔵', '🔴'], answer: '🔵', options: ['🔵', '🔴', '🟢'] },
-  { id: 2, sequence: ['🍎', '🍌', '🍎', '🍌', '🍎'], answer: '🍌', options: ['🍇', '🍌', '🍎'] },
-  { id: 3, sequence: ['🐶', '🐱', '🐶', '🐱', '🐶'], answer: '🐱', options: ['🐭', '🐱', '🐶'] },
-  { id: 4, sequence: ['☀️', '☁️', '☀️', '☁️', '☀️'], answer: '☁️', options: ['🌧️', '☁️', '☀️'] },
-  { id: 5, sequence: ['A', 'B', 'A', 'B', 'A'], answer: 'B', options: ['C', 'B', 'A'] },
-  { id: 6, sequence: ['🔺', '🔻', '🔺', '🔻', '🔺'], answer: '🔻', options: ['🟦', '🔻', '🔺'] },
+  { id: 1, sequence: ['🔴', '🔵', '🔴', '🔵', '🔴'], answer: '🔵', options: ['🔵', '🔴', '🟢', '🟡'] },
+  { id: 2, sequence: ['🍎', '🍌', '🍎', '🍌', '🍎'], answer: '🍌', options: ['🍇', '🍌', '🍎', '🍊'] },
+  { id: 3, sequence: ['🐶', '🐱', '🐶', '🐱', '🐶'], answer: '🐱', options: ['🐭', '🐱', '🐶', '🐷'] },
+  { id: 4, sequence: ['☀️', '☁️', '☀️', '☁️', '☀️'], answer: '☁️', options: ['🌧️', '☁️', '☀️', '❄️'] },
+  { id: 5, sequence: ['A', 'B', 'A', 'B', 'A'], answer: 'B', options: ['C', 'B', 'A', 'D'] },
+  { id: 6, sequence: ['🔺', '🔻', '🔺', '🔻', '🔺'], answer: '🔻', options: ['🟦', '🔻', '🔺', '⚪'] },
 ];
 
 // --- COMPONENTS CON ---
@@ -189,7 +189,9 @@ const MathGame = ({ onBack, addScore }) => {
     const isAddition = Math.random() > 0.4; let a, b, result, operator;
     if (isAddition) { a = Math.floor(Math.random() * 6); b = Math.floor(Math.random() * 5) + 1; result = a + b; operator = '+'; }
     else { a = Math.floor(Math.random() * 6) + 4; b = Math.floor(Math.random() * a); result = a - b; operator = '-'; }
-    let options = new Set([result]); while (options.size < 3) { let fake = result + Math.floor(Math.random() * 5) - 2; if (fake >= 0 && fake !== result) options.add(fake); }
+    let options = new Set([result]); 
+    // Tăng lên 4 đáp án
+    while (options.size < 4) { let fake = result + Math.floor(Math.random() * 5) - 2; if (fake >= 0 && fake !== result) options.add(fake); }
     setQuestion({ a, b, result, operator, options: Array.from(options).sort(() => Math.random() - 0.5) }); setFeedback(null);
   };
   useEffect(() => { generateQuestion(); }, []);
@@ -208,7 +210,8 @@ const MathGame = ({ onBack, addScore }) => {
             <span className="text-gray-400 mb-12">=</span>
             <span className="w-20 h-24 border-4 border-dashed border-gray-300 rounded-2xl flex items-center justify-center text-gray-300 mb-12">?</span>
         </div>
-        <div className="grid grid-cols-3 gap-4">{question.options.map((opt, idx) => (<Button key={idx} onClick={() => handleAnswer(opt)} color="blue" className="text-4xl !py-6">{opt}</Button>))}</div>
+        {/* Chuyển sang grid 2 cột cho 4 đáp án */}
+        <div className="grid grid-cols-2 gap-4">{question.options.map((opt, idx) => (<Button key={idx} onClick={() => handleAnswer(opt)} color="blue" className="text-4xl !py-6">{opt}</Button>))}</div>
       </div>
     </div>
   );
@@ -225,7 +228,8 @@ const VietnameseGame = ({ onBack, addScore }) => {
          {feedback === 'correct' && <><div className="absolute inset-0 bg-green-100/95 flex items-center justify-center z-20 flex-col animate-bounce-in"><span className="text-6xl mb-4">{currentQ.image}</span><span className="text-3xl font-bold text-green-600">{currentQ.full}</span></div><Fireworks /></>}
         {feedback === 'wrong' && <div className="absolute inset-0 bg-red-100/95 flex items-center justify-center z-20 flex-col animate-shake"><span className="text-3xl font-bold text-red-600">Sai rồi!</span></div>}
         <div className="text-9xl mb-6 animate-pulse-slow">{currentQ.image}</div><div className="text-5xl font-bold text-slate-700 mb-8 bg-gray-100 px-8 py-4 rounded-2xl border-2 border-gray-200">{currentQ.word}</div>
-        <div className="grid grid-cols-3 gap-4 w-full">{currentQ.options.map((opt, idx) => (<Button key={idx} onClick={() => handleAnswer(opt)} color="green" className="text-3xl !py-4">{opt}</Button>))}</div>
+        {/* Grid 2 cột cho 4 đáp án */}
+        <div className="grid grid-cols-2 gap-4 w-full">{currentQ.options.map((opt, idx) => (<Button key={idx} onClick={() => handleAnswer(opt)} color="green" className="text-3xl !py-4">{opt}</Button>))}</div>
       </div>
     </div>
   );
@@ -273,7 +277,17 @@ const ComparisonGame = ({ onBack, addScore }) => {
 
 const ShadowGame = ({ onBack, addScore }) => {
   const [currentLevel, setCurrentLevel] = useState(null); const [feedback, setFeedback] = useState(null);
-  const generateLevel = () => { const target = shadowData[Math.floor(Math.random() * shadowData.length)]; let options = [target]; while (options.length < 3) { const randomItem = shadowData[Math.floor(Math.random() * shadowData.length)]; if (!options.find(o => o.id === randomItem.id)) options.push(randomItem); } options = options.sort(() => Math.random() - 0.5); setCurrentLevel({ target, options }); setFeedback(null); };
+  const generateLevel = () => {
+    const target = shadowData[Math.floor(Math.random() * shadowData.length)];
+    let options = [target];
+    // Tăng lên 4 lựa chọn
+    while (options.length < 4) {
+      const randomItem = shadowData[Math.floor(Math.random() * shadowData.length)];
+      if (!options.find(o => o.id === randomItem.id)) options.push(randomItem);
+    }
+    options = options.sort(() => Math.random() - 0.5);
+    setCurrentLevel({ target, options }); setFeedback(null);
+  };
   useEffect(() => { generateLevel(); }, []);
   const handleAnswer = (item) => { if (feedback) return; if (item.id === currentLevel.target.id) { playSound('correct'); setFeedback('correct'); addScore(10); setTimeout(generateLevel, 1500); } else { playSound('wrong'); setFeedback('wrong'); setTimeout(() => setFeedback(null), 1000); } };
   if (!currentLevel) return <div>Loading...</div>;
@@ -285,7 +299,8 @@ const ShadowGame = ({ onBack, addScore }) => {
         {feedback === 'wrong' && <div className="absolute inset-0 bg-red-100/95 flex items-center justify-center z-20 flex-col animate-shake"><span className="text-3xl font-bold text-red-600">Tìm lại nhé!</span></div>}
         <div className="mb-8 p-6 bg-teal-50 rounded-full w-40 h-40 flex items-center justify-center border-4 border-teal-100"><span className="text-8xl drop-shadow-md">{currentLevel.target.img}</span></div>
         <p className="text-teal-800 font-bold mb-6 text-xl">Đâu là bóng của bạn ấy?</p>
-        <div className="grid grid-cols-3 gap-6 w-full">{currentLevel.options.map((opt, idx) => (<button key={idx} onClick={() => handleAnswer(opt)} className="bg-gray-200 hover:bg-gray-300 rounded-2xl p-4 flex items-center justify-center h-32 w-full transition-transform active:scale-95 shadow-md"><span className="text-6xl filter brightness-0 opacity-80">{opt.img}</span></button>))}</div>
+        {/* Grid 2 cột cho 4 đáp án */}
+        <div className="grid grid-cols-2 gap-6 w-full">{currentLevel.options.map((opt, idx) => (<button key={idx} onClick={() => handleAnswer(opt)} className="bg-gray-200 hover:bg-gray-300 rounded-2xl p-4 flex items-center justify-center h-32 w-full transition-transform active:scale-95 shadow-md"><span className="text-6xl filter brightness-0 opacity-80">{opt.img}</span></button>))}</div>
       </div>
     </div>
   );
@@ -348,7 +363,7 @@ const ColorSortGame = ({ onBack, addScore }) => {
 
 const Shape3DGame = ({ onBack, addScore }) => {
   const [currentLevel, setCurrentLevel] = useState(null); const [feedback, setFeedback] = useState(null);
-  const generateLevel = () => { const targetShape = shapes3D[Math.floor(Math.random() * shapes3D.length)]; const targetItem = targetShape.items[Math.floor(Math.random() * targetShape.items.length)]; let options = [targetShape]; while (options.length < 3) { const randomShape = shapes3D[Math.floor(Math.random() * shapes3D.length)]; if (!options.find(o => o.id === randomShape.id)) options.push(randomShape); } setCurrentLevel({ item: targetItem, correctShape: targetShape, options: options.sort(() => Math.random() - 0.5) }); setFeedback(null); };
+  const generateLevel = () => { const targetShape = shapes3D[Math.floor(Math.random() * shapes3D.length)]; const targetItem = targetShape.items[Math.floor(Math.random() * targetShape.items.length)]; let options = [targetShape]; while (options.length < 4) { const randomShape = shapes3D[Math.floor(Math.random() * shapes3D.length)]; if (!options.find(o => o.id === randomShape.id)) options.push(randomShape); } setCurrentLevel({ item: targetItem, correctShape: targetShape, options: options.sort(() => Math.random() - 0.5) }); setFeedback(null); };
   useEffect(() => { generateLevel(); }, []);
   const handleAnswer = (shapeId) => { if (feedback) return; if (shapeId === currentLevel.correctShape.id) { playSound('correct'); setFeedback('correct'); addScore(10); setTimeout(generateLevel, 1500); } else { playSound('wrong'); setFeedback('wrong'); setTimeout(() => setFeedback(null), 1000); } };
   const getShapeIcon = (id) => { switch(id) { case 'sphere': return <Circle size={40} className="text-orange-500 fill-orange-200" />; case 'cube': return <Box size={40} className="text-blue-500 fill-blue-200" />; case 'cylinder': return <Database size={40} className="text-green-500 fill-green-200" />; case 'cone': return <Filter size={40} className="text-purple-500 fill-purple-200" />; default: return <Box />; } };
@@ -361,8 +376,8 @@ const Shape3DGame = ({ onBack, addScore }) => {
         {feedback === 'wrong' && <div className="absolute inset-0 bg-red-100/95 flex items-center justify-center z-20 flex-col animate-shake"><span className="text-3xl font-bold text-red-600">Sai rồi!</span></div>}
         <div className="mb-6"><span className="text-7xl md:text-9xl drop-shadow-2xl animate-pulse-slow block transform hover:scale-110 transition-transform cursor-pointer">{currentLevel.item}</span></div>
         <h2 className="text-xl font-bold text-cyan-800 mb-8 text-center">Đồ vật này có dạng hình gì?</h2>
-        {/* Đã sửa: grid-cols-1 md:grid-cols-2 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">{currentLevel.options.map((shape) => (<button key={shape.id} onClick={() => handleAnswer(shape.id)} className="bg-cyan-50 hover:bg-cyan-100 border-2 border-cyan-200 rounded-2xl p-4 flex items-center gap-4 transition-all active:scale-95 shadow-sm"><div className="bg-white p-2 rounded-xl border border-cyan-100">{getShapeIcon(shape.id)}</div><span className="text-xl font-bold text-cyan-700">{shape.name}</span></button>))}</div>
+        {/* Grid 2 cột cho 4 đáp án */}
+        <div className="grid grid-cols-2 gap-4 w-full">{currentLevel.options.map((shape) => (<button key={shape.id} onClick={() => handleAnswer(shape.id)} className="bg-cyan-50 hover:bg-cyan-100 border-2 border-cyan-200 rounded-2xl p-4 flex items-center gap-4 transition-all active:scale-95 shadow-sm"><div className="bg-white p-2 rounded-xl border border-cyan-100">{getShapeIcon(shape.id)}</div><span className="text-xl font-bold text-cyan-700">{shape.name}</span></button>))}</div>
       </div>
     </div>
   );
@@ -389,7 +404,9 @@ const BasicShapeGame = ({ onBack, addScore }) => {
 
 const FeedingGame = ({ onBack, addScore }) => {
   const [level, setLevel] = useState(null); const [feedback, setFeedback] = useState(null);
-  const generateLevel = () => { const current = feedingData[Math.floor(Math.random() * feedingData.length)]; let options = [current.food]; const wrongOptions = [...current.wrong].sort(() => 0.5 - Math.random()).slice(0, 2); options = [...options, ...wrongOptions]; options = options.sort(() => Math.random() - 0.5); setLevel({ current, options }); setFeedback(null); };
+  const generateLevel = () => { const current = feedingData[Math.floor(Math.random() * feedingData.length)]; let options = [current.food]; 
+  // Lấy 3 món sai để tổng cộng có 4 đáp án
+  const wrongOptions = [...current.wrong].sort(() => 0.5 - Math.random()).slice(0, 3); options = [...options, ...wrongOptions]; options = options.sort(() => Math.random() - 0.5); setLevel({ current, options }); setFeedback(null); };
   useEffect(() => { generateLevel(); }, []);
   const handleAnswer = (food) => { if (feedback) return; if (food === level.current.food) { playSound('correct'); setFeedback('correct'); addScore(10); setTimeout(generateLevel, 1500); } else { playSound('wrong'); setFeedback('wrong'); setTimeout(() => setFeedback(null), 1000); } };
   if (!level) return <div>Loading...</div>;
@@ -400,7 +417,8 @@ const FeedingGame = ({ onBack, addScore }) => {
         {feedback === 'correct' && <><div className="absolute inset-0 bg-green-100/95 flex items-center justify-center z-20 flex-col animate-bounce-in text-center"><span className="text-6xl mb-2">😋</span><span className="text-3xl font-bold text-green-600">Ngon quá!</span></div><Fireworks /></>}
         {feedback === 'wrong' && <div className="absolute inset-0 bg-red-100/95 flex items-center justify-center z-20 flex-col animate-shake text-center"><span className="text-6xl mb-2">🤢</span><span className="text-3xl font-bold text-red-600">Không chịu đâu!</span></div>}
         <div className="text-center mb-8"><div className="text-9xl mb-4 animate-bounce">{level.current.animal}</div><h2 className="text-2xl font-bold text-amber-800">{level.current.name} đói bụng quá!</h2><p className="text-gray-500">Bé hãy chọn món ăn cho bạn ấy nhé</p></div>
-        <div className="grid grid-cols-3 gap-4 w-full">{level.options.map((food, idx) => (<button key={idx} onClick={() => handleAnswer(food)} className="bg-amber-50 border-b-4 border-amber-200 hover:border-amber-300 rounded-2xl p-4 flex items-center justify-center aspect-square shadow-sm transition-all active:scale-95 active:border-b-0 active:translate-y-1"><span className="text-5xl">{food}</span></button>))}</div>
+        {/* Grid 2 cột cho 4 đáp án */}
+        <div className="grid grid-cols-2 gap-4 w-full">{level.options.map((food, idx) => (<button key={idx} onClick={() => handleAnswer(food)} className="bg-amber-50 border-b-4 border-amber-200 hover:border-amber-300 rounded-2xl p-4 flex items-center justify-center aspect-square shadow-sm transition-all active:scale-95 active:border-b-0 active:translate-y-1"><span className="text-5xl">{food}</span></button>))}</div>
       </div>
     </div>
   );
@@ -420,7 +438,8 @@ const LogicGame = ({ onBack, addScore }) => {
         {feedback === 'wrong' && <div className="absolute inset-0 bg-red-100/95 flex items-center justify-center z-20 flex-col animate-shake text-center"><X size={80} className="text-red-500 mb-4" /><span className="text-3xl font-bold text-red-600">Thử lại nào!</span></div>}
         <h2 className="text-xl font-bold text-fuchsia-800 mb-6 text-center">Hình tiếp theo là gì nhỉ?</h2>
         <div className="flex justify-center gap-2 mb-8 bg-fuchsia-50 p-4 rounded-2xl w-full overflow-x-auto">{level.sequence.map((item, idx) => (<div key={idx} className="text-4xl w-12 h-12 flex items-center justify-center bg-white rounded-lg shadow-sm border border-fuchsia-100">{item}</div>))}<div className="text-4xl w-12 h-12 flex items-center justify-center bg-fuchsia-200 rounded-lg shadow-inner text-fuchsia-500 font-bold">?</div></div>
-        <div className="grid grid-cols-3 gap-4 w-full">{level.options.map((opt, idx) => (<button key={idx} onClick={() => handleAnswer(opt)} className="bg-fuchsia-50 border-b-4 border-fuchsia-200 hover:border-fuchsia-300 rounded-2xl p-4 flex items-center justify-center aspect-square shadow-sm transition-all active:scale-95 active:border-b-0 active:translate-y-1"><span className="text-4xl">{opt}</span></button>))}</div>
+        {/* Grid 2 cột cho 4 đáp án */}
+        <div className="grid grid-cols-2 gap-4 w-full">{level.options.map((opt, idx) => (<button key={idx} onClick={() => handleAnswer(opt)} className="bg-fuchsia-50 border-b-4 border-fuchsia-200 hover:border-fuchsia-300 rounded-2xl p-4 flex items-center justify-center aspect-square shadow-sm transition-all active:scale-95 active:border-b-0 active:translate-y-1"><span className="text-4xl">{opt}</span></button>))}</div>
       </div>
     </div>
   );
