@@ -145,21 +145,13 @@ const Button = ({ onClick, children, className = "", color = "blue" }) => {
   return <button onClick={handleClick} className={`${baseStyle} ${colors[color]} ${className}`}>{children}</button>;
 };
 
-// --- MÀN HÌNH CHÍNH (ĐÃ CẬP NHẬT GRID) ---
+// --- MÀN HÌNH CHÍNH (Giữ nguyên) ---
 const MainMenu = ({ onSelectGame }) => (
   <div className="flex flex-col items-center justify-center min-h-full space-y-8 animate-fade-in p-4 pb-20">
     <div className="text-center space-y-2 mt-4">
       <h1 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 drop-shadow-md pb-2">Bé Vui Học</h1>
       <p className="text-xl text-gray-600 font-medium">Hành trang vào lớp 1</p>
     </div>
-    
-    {/* ĐIỀU CHỈNH GRID Ở ĐÂY:
-        - grid-cols-2: Mặc định (điện thoại) là 2 cột
-        - md:grid-cols-3: Máy tính bảng là 3 cột
-        - lg:grid-cols-4: Laptop là 4 cột
-        - xl:grid-cols-6: Màn hình lớn là 6 cột (trải full ngang)
-        - w-full px-2: Chiếm hết chiều ngang, lề nhỏ
-    */}
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 md:gap-6 w-full px-2 md:px-8">
       {[
         { id: 'math', icon: '🔢', title: 'Toán Học Vui', color: 'blue' },
@@ -181,7 +173,6 @@ const MainMenu = ({ onSelectGame }) => (
           <h2 className={`text-sm md:text-lg font-bold text-${game.color}-600 text-center leading-tight`}>{game.title}</h2>
         </div>
       ))}
-      
       <div onClick={() => { playSound('click'); onSelectGame('thief'); }} className="cursor-pointer group bg-slate-800 border-4 border-yellow-400 hover:border-yellow-300 rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col items-center gap-2 md:gap-4 shadow-xl transition-all hover:-translate-y-2 ring-2 md:ring-4 ring-offset-2 ring-slate-800/20">
         <div className="w-12 h-12 md:w-16 md:h-16 bg-slate-700 rounded-full flex items-center justify-center text-2xl md:text-4xl shadow-inner group-hover:scale-110 transition-transform animate-pulse-slow">🦝</div>
         <h2 className="text-sm md:text-lg font-bold text-yellow-400 text-center leading-tight">Cảnh Sát Tí Hon</h2>
@@ -190,7 +181,8 @@ const MainMenu = ({ onSelectGame }) => (
   </div>
 );
 
-// --- GAME COMPONENTS (Giữ nguyên logic, chỉ chỉnh nhẹ UI nếu cần) ---
+// --- GAME COMPONENTS ---
+
 const MathGame = ({ onBack, addScore }) => {
   const [question, setQuestion] = useState(null); const [feedback, setFeedback] = useState(null); const [streak, setStreak] = useState(0);
   const generateQuestion = () => {
@@ -204,7 +196,7 @@ const MathGame = ({ onBack, addScore }) => {
   const handleAnswer = (ans) => { if (feedback) return; if (ans === question.result) { playSound('correct'); setFeedback('correct'); addScore(10); setStreak(s => s + 1); setTimeout(generateQuestion, 1500); } else { playSound('wrong'); setFeedback('wrong'); setStreak(0); setTimeout(() => setFeedback(null), 1000); } };
   if (!question) return <div>Loading...</div>;
   return (
-    <div className="flex flex-col items-center h-full max-w-2xl mx-auto pt-4 px-4">
+    <div className="flex flex-col items-center min-h-full max-w-2xl mx-auto pt-4 px-4">
       <div className="flex justify-between w-full items-center mb-6"><Button onClick={onBack} color="purple" className="!py-2 !px-4 text-sm"><ArrowLeft size={20} /> Menu</Button><div className="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-xl font-bold flex items-center gap-2"><Star className="fill-yellow-500 text-yellow-500" /> Chuỗi: {streak}</div></div>
       <div className="bg-white rounded-3xl shadow-xl p-6 w-full border-b-8 border-blue-200 relative overflow-hidden">
         {feedback === 'correct' && <><div className="absolute inset-0 bg-green-100/95 flex items-center justify-center z-20 flex-col animate-bounce-in"><Check size={80} className="text-green-500 mb-2" /><span className="text-3xl font-bold text-green-600">Đúng rồi!</span></div><Fireworks /></>}
@@ -227,7 +219,7 @@ const VietnameseGame = ({ onBack, addScore }) => {
   const currentQ = vietnameseData[currentIdx];
   const handleAnswer = (opt) => { if (feedback) return; if (opt === currentQ.answer) { playSound('correct'); setFeedback('correct'); addScore(10); setTimeout(() => { setFeedback(null); setCurrentIdx((prev) => (prev + 1) % vietnameseData.length); }, 1500); } else { playSound('wrong'); setFeedback('wrong'); setTimeout(() => setFeedback(null), 1000); } };
   return (
-    <div className="flex flex-col items-center h-full max-w-2xl mx-auto pt-4 px-4">
+    <div className="flex flex-col items-center min-h-full max-w-2xl mx-auto pt-4 px-4">
       <div className="flex justify-between w-full items-center mb-6"><Button onClick={onBack} color="green" className="!py-2 !px-4 text-sm"><ArrowLeft size={20} /> Menu</Button><div className="bg-green-100 text-green-700 px-4 py-2 rounded-xl font-bold">{currentIdx + 1}/{vietnameseData.length}</div></div>
       <div className="bg-white rounded-3xl shadow-xl p-8 w-full border-b-8 border-green-200 flex flex-col items-center relative overflow-hidden">
          {feedback === 'correct' && <><div className="absolute inset-0 bg-green-100/95 flex items-center justify-center z-20 flex-col animate-bounce-in"><span className="text-6xl mb-4">{currentQ.image}</span><span className="text-3xl font-bold text-green-600">{currentQ.full}</span></div><Fireworks /></>}
@@ -249,7 +241,7 @@ const MemoryGame = ({ onBack, addScore }) => {
   };
   const isWin = matched.length === cards.length && cards.length > 0;
   return (
-    <div className="flex flex-col items-center h-full pt-4 px-4 w-full max-w-3xl mx-auto">
+    <div className="flex flex-col items-center min-h-full pt-4 px-4 w-full max-w-3xl mx-auto">
       <div className="flex justify-between w-full items-center mb-6"><Button onClick={onBack} color="orange" className="!py-2 !px-4 text-sm"><ArrowLeft size={20} /> Menu</Button><Button onClick={shuffleCards} color="orange" className="!py-2 !px-4 text-sm bg-orange-400"><RefreshCw size={20} /> Chơi lại</Button></div>
       {isWin ? <><div className="flex flex-col items-center justify-center bg-white p-8 rounded-3xl shadow-xl animate-bounce-in border-4 border-orange-300 z-10 relative"><Trophy size={80} className="text-yellow-500 mb-4" /><h2 className="text-3xl font-bold text-orange-600 mb-2">Chiến thắng!</h2><Button onClick={shuffleCards} color="orange">Chơi ván mới</Button></div><Fireworks /></> : <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 w-full aspect-[3/4] sm:aspect-auto">{cards.map((card) => { const isFlipped = flipped.includes(card.id) || matched.includes(card.id); const isMatched = matched.includes(card.id); return (<div key={card.id} onClick={() => handleClick(card.id)} className={`aspect-square rounded-2xl cursor-pointer flex items-center justify-center text-4xl transition-all duration-500 transform ${isFlipped ? 'rotate-y-180 bg-white border-4 border-orange-400' : 'bg-orange-500 border-4 border-orange-600'} ${isMatched ? 'opacity-50 scale-95 border-green-400 bg-green-50' : ''} shadow-lg`} style={{ perspective: '1000px', transformStyle: 'preserve-3d' }}>{isFlipped ? <span className="animate-fade-in">{card.icon}</span> : <span className="text-white/50 font-bold">?</span>}</div>); })}</div>}
     </div>
@@ -263,7 +255,7 @@ const ComparisonGame = ({ onBack, addScore }) => {
   const checkAnswer = (operator) => { if (feedback) return; const { a, b } = data; let correct = false; if (operator === '>' && a > b) correct = true; if (operator === '<' && a < b) correct = true; if (operator === '=' && a === b) correct = true; if (correct) { playSound('correct'); setFeedback('correct'); addScore(10); setTimeout(generateLevel, 1500); } else { playSound('wrong'); setFeedback('wrong'); setTimeout(() => setFeedback(null), 1000); } };
   if (!data) return <div>Loading...</div>;
   return (
-    <div className="flex flex-col items-center h-full max-w-2xl mx-auto pt-4 px-4">
+    <div className="flex flex-col items-center min-h-full max-w-2xl mx-auto pt-4 px-4">
       <div className="flex justify-between w-full items-center mb-6"><Button onClick={onBack} color="pink" className="!py-2 !px-4 text-sm"><ArrowLeft size={20} /> Menu</Button></div>
       <div className="bg-white rounded-3xl shadow-xl p-6 w-full border-b-8 border-pink-200 relative overflow-hidden">
         {feedback === 'correct' && <><div className="absolute inset-0 bg-green-100/95 flex items-center justify-center z-20 flex-col animate-bounce-in"><Check size={80} className="text-green-500 mb-2" /><span className="text-3xl font-bold text-green-600">Đúng rồi!</span></div><Fireworks /></>}
@@ -286,7 +278,7 @@ const ShadowGame = ({ onBack, addScore }) => {
   const handleAnswer = (item) => { if (feedback) return; if (item.id === currentLevel.target.id) { playSound('correct'); setFeedback('correct'); addScore(10); setTimeout(generateLevel, 1500); } else { playSound('wrong'); setFeedback('wrong'); setTimeout(() => setFeedback(null), 1000); } };
   if (!currentLevel) return <div>Loading...</div>;
   return (
-    <div className="flex flex-col items-center h-full max-w-2xl mx-auto pt-4 px-4">
+    <div className="flex flex-col items-center min-h-full max-w-2xl mx-auto pt-4 px-4">
       <div className="flex justify-between w-full items-center mb-6"><Button onClick={onBack} color="teal" className="!py-2 !px-4 text-sm"><ArrowLeft size={20} /> Menu</Button></div>
       <div className="bg-white rounded-3xl shadow-xl p-8 w-full border-b-8 border-teal-200 flex flex-col items-center relative overflow-hidden">
         {feedback === 'correct' && <><div className="absolute inset-0 bg-green-100/95 flex items-center justify-center z-20 flex-col animate-bounce-in"><span className="text-6xl mb-4">{currentLevel.target.img}</span><span className="text-3xl font-bold text-green-600">Chính xác!</span></div><Fireworks /></>}
@@ -308,7 +300,7 @@ const ThiefGame = ({ onBack, addScore }) => {
   const handleTap = (index, type) => { if (!isPlaying || !type) return; if (type === 'thief') { playSound('correct'); setScore(s => s + 10); setGrid(prev => { const next = [...prev]; next[index] = 'caught'; return next; }); } else if (type === 'police' || type === 'civilian') { playSound('wrong'); setScore(s => Math.max(0, s - 5)); setGrid(prev => { const next = [...prev]; next[index] = 'wrong'; return next; }); } };
   const renderContent = (type) => { if (type === 'thief') return <span className="text-5xl animate-bounce-in">🦝</span>; if (type === 'police') return <span className="text-5xl animate-fade-in">👮</span>; if (type === 'civilian') return <span className="text-5xl animate-fade-in">🐶</span>; if (type === 'caught') return <span className="text-5xl animate-ping">💥</span>; if (type === 'wrong') return <span className="text-5xl">🚫</span>; return null; };
   return (
-    <div className="flex flex-col items-center h-full max-w-2xl mx-auto pt-4 px-4 bg-slate-900 rounded-xl min-h-[500px] shadow-2xl border-4 border-slate-700">
+    <div className="flex flex-col items-center min-h-full max-w-2xl mx-auto pt-4 px-4 bg-slate-900 rounded-xl shadow-2xl border-4 border-slate-700">
       <div className="flex justify-between w-full items-center mb-6 mt-4"><Button onClick={onBack} color="slate" className="!py-2 !px-4 text-sm border border-slate-500"><ArrowLeft size={20} /> Thoát</Button><div className="flex gap-4"><div className="bg-yellow-500 text-slate-900 px-4 py-2 rounded-xl font-bold flex items-center gap-2"><Zap size={20} /> {score}</div><div className={`px-4 py-2 rounded-xl font-bold flex items-center gap-2 ${timeLeft < 10 ? 'bg-red-500 animate-pulse text-white' : 'bg-slate-700 text-white'}`}><Clock size={20} /> {timeLeft}s</div></div></div>
       {!isPlaying && timeLeft === 0 ? <div className="flex flex-col items-center justify-center h-full animate-bounce-in bg-slate-800 p-8 rounded-3xl border-4 border-yellow-400"><Trophy size={80} className="text-yellow-400 mb-4" /><h2 className="text-3xl font-bold text-white mb-2">Hết giờ!</h2><p className="text-slate-300 mb-6 text-xl">Bé bắt được: {score / 10} tên trộm</p><Button onClick={startGame} color="yellow" className="text-slate-900">Chơi lại ngay</Button><Fireworks /></div> : !isPlaying ? <div className="flex flex-col items-center justify-center h-full text-center p-4"><ShieldAlert size={80} className="text-yellow-400 mb-6" /><h2 className="text-3xl font-bold text-white mb-4">Nhiệm Vụ Cảnh Sát</h2><Button onClick={startGame} color="yellow" className="text-slate-900 animate-pulse">Bắt đầu ngay!</Button></div> : <div className="w-full max-w-sm"><div className="grid grid-cols-3 gap-3 md:gap-4">{grid.map((cellType, idx) => (<div key={idx} onMouseDown={() => handleTap(idx, cellType)} onTouchStart={(e) => { e.preventDefault(); handleTap(idx, cellType); }} className={`aspect-square bg-slate-800 rounded-2xl border-b-8 border-slate-950 shadow-inner flex items-center justify-center relative overflow-hidden cursor-pointer active:border-b-0 active:translate-y-2 transition-all ${cellType === 'caught' ? 'bg-yellow-200' : ''} ${cellType === 'wrong' ? 'bg-red-200' : ''}`}><div className="absolute bottom-0 w-full h-2 bg-slate-700/50 rounded-full blur-sm mb-2"></div>{renderContent(cellType)}</div>))}</div></div>}
     </div>
@@ -322,7 +314,7 @@ const ColorShapeGame = ({ onBack, addScore }) => {
   const handleAnswer = (option) => { if (feedback) return; if (option.id === 'correct') { playSound('correct'); setFeedback('correct'); addScore(10); setTimeout(generateLevel, 1500); } else { playSound('wrong'); setFeedback('wrong'); setTimeout(() => setFeedback(null), 1000); } };
   if (!level) return <div>Loading...</div>;
   return (
-    <div className="flex flex-col items-center h-full max-w-2xl mx-auto pt-4 px-4">
+    <div className="flex flex-col items-center min-h-full max-w-2xl mx-auto pt-4 px-4">
       <div className="flex justify-between w-full items-center mb-6"><Button onClick={onBack} color="rose" className="!py-2 !px-4 text-sm"><ArrowLeft size={20} /> Menu</Button></div>
       <div className="bg-white rounded-3xl shadow-xl p-8 w-full border-b-8 border-rose-200 flex flex-col items-center relative overflow-hidden">
         {feedback === 'correct' && <><div className="absolute inset-0 bg-green-100/95 flex items-center justify-center z-20 flex-col animate-bounce-in"><Check size={80} className="text-green-500 mb-2" /><span className="text-3xl font-bold text-green-600">Tuyệt vời!</span></div><Fireworks /></>}
@@ -341,7 +333,7 @@ const ColorSortGame = ({ onBack, addScore }) => {
   const handleBucketClick = (colorId) => { if (feedback) return; if (colorId === currentItem.colorId) { playSound('correct'); setFeedback('correct'); addScore(10); setTimeout(generateLevel, 1500); } else { playSound('wrong'); setFeedback('wrong'); setTimeout(() => setFeedback(null), 1000); } };
   if (!currentItem) return <div>Loading...</div>;
   return (
-    <div className="flex flex-col items-center h-full max-w-2xl mx-auto pt-4 px-4">
+    <div className="flex flex-col items-center min-h-full max-w-2xl mx-auto pt-4 px-4">
       <div className="flex justify-between w-full items-center mb-6"><Button onClick={onBack} color="indigo" className="!py-2 !px-4 text-sm"><ArrowLeft size={20} /> Menu</Button></div>
       <div className="bg-white rounded-3xl shadow-xl p-6 w-full border-b-8 border-indigo-200 flex flex-col items-center relative overflow-hidden">
         {feedback === 'correct' && <><div className="absolute inset-0 bg-green-100/95 flex items-center justify-center z-20 flex-col animate-bounce-in"><Check size={80} className="text-green-500 mb-2" /><span className="text-3xl font-bold text-green-600">Đúng màu rồi!</span></div><Fireworks /></>}
@@ -362,14 +354,15 @@ const Shape3DGame = ({ onBack, addScore }) => {
   const getShapeIcon = (id) => { switch(id) { case 'sphere': return <Circle size={40} className="text-orange-500 fill-orange-200" />; case 'cube': return <Box size={40} className="text-blue-500 fill-blue-200" />; case 'cylinder': return <Database size={40} className="text-green-500 fill-green-200" />; case 'cone': return <Filter size={40} className="text-purple-500 fill-purple-200" />; default: return <Box />; } };
   if (!currentLevel) return <div>Loading...</div>;
   return (
-    <div className="flex flex-col items-center h-full max-w-2xl mx-auto pt-4 px-4">
+    <div className="flex flex-col items-center min-h-full max-w-2xl mx-auto pt-4 px-4">
       <div className="flex justify-between w-full items-center mb-6"><Button onClick={onBack} color="cyan" className="!py-2 !px-4 text-sm"><ArrowLeft size={20} /> Menu</Button></div>
       <div className="bg-white rounded-3xl shadow-xl p-8 w-full border-b-8 border-cyan-200 flex flex-col items-center relative overflow-hidden">
         {feedback === 'correct' && <><div className="absolute inset-0 bg-green-100/95 flex items-center justify-center z-20 flex-col animate-bounce-in text-center p-4"><span className="text-6xl mb-4">{currentLevel.item}</span><h3 className="text-3xl font-bold text-green-600 mb-2">{currentLevel.correctShape.name}</h3><p className="text-green-800 text-lg">{currentLevel.correctShape.desc}</p></div><Fireworks /></>}
         {feedback === 'wrong' && <div className="absolute inset-0 bg-red-100/95 flex items-center justify-center z-20 flex-col animate-shake"><span className="text-3xl font-bold text-red-600">Sai rồi!</span></div>}
-        <div className="mb-6"><span className="text-9xl drop-shadow-2xl animate-pulse-slow block transform hover:scale-110 transition-transform cursor-pointer">{currentLevel.item}</span></div>
+        <div className="mb-6"><span className="text-7xl md:text-9xl drop-shadow-2xl animate-pulse-slow block transform hover:scale-110 transition-transform cursor-pointer">{currentLevel.item}</span></div>
         <h2 className="text-xl font-bold text-cyan-800 mb-8 text-center">Đồ vật này có dạng hình gì?</h2>
-        <div className="grid grid-cols-1 gap-4 w-full">{currentLevel.options.map((shape) => (<button key={shape.id} onClick={() => handleAnswer(shape.id)} className="bg-cyan-50 hover:bg-cyan-100 border-2 border-cyan-200 rounded-2xl p-4 flex items-center gap-4 transition-all active:scale-95 shadow-sm"><div className="bg-white p-2 rounded-xl border border-cyan-100">{getShapeIcon(shape.id)}</div><span className="text-xl font-bold text-cyan-700">{shape.name}</span></button>))}</div>
+        {/* Đã sửa: grid-cols-1 md:grid-cols-2 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">{currentLevel.options.map((shape) => (<button key={shape.id} onClick={() => handleAnswer(shape.id)} className="bg-cyan-50 hover:bg-cyan-100 border-2 border-cyan-200 rounded-2xl p-4 flex items-center gap-4 transition-all active:scale-95 shadow-sm"><div className="bg-white p-2 rounded-xl border border-cyan-100">{getShapeIcon(shape.id)}</div><span className="text-xl font-bold text-cyan-700">{shape.name}</span></button>))}</div>
       </div>
     </div>
   );
@@ -382,7 +375,7 @@ const BasicShapeGame = ({ onBack, addScore }) => {
   const handleAnswer = (item) => { if (feedback) return; if (item.id === level.target.id) { playSound('correct'); setFeedback('correct'); addScore(10); setTimeout(generateLevel, 1500); } else { playSound('wrong'); setFeedback('wrong'); setTimeout(() => setFeedback(null), 1000); } };
   if (!level) return <div>Loading...</div>;
   return (
-    <div className="flex flex-col items-center h-full max-w-2xl mx-auto pt-4 px-4">
+    <div className="flex flex-col items-center min-h-full max-w-2xl mx-auto pt-4 px-4">
       <div className="flex justify-between w-full items-center mb-6"><Button onClick={onBack} color="lime" className="!py-2 !px-4 text-sm"><ArrowLeft size={20} /> Menu</Button></div>
       <div className="bg-white rounded-3xl shadow-xl p-8 w-full border-b-8 border-lime-200 flex flex-col items-center relative overflow-hidden">
         {feedback === 'correct' && <><div className="absolute inset-0 bg-green-100/95 flex items-center justify-center z-20 flex-col animate-bounce-in"><Check size={80} className="text-green-500 mb-2" /><span className="text-3xl font-bold text-green-600">Đúng rồi!</span></div><Fireworks /></>}
@@ -401,7 +394,7 @@ const FeedingGame = ({ onBack, addScore }) => {
   const handleAnswer = (food) => { if (feedback) return; if (food === level.current.food) { playSound('correct'); setFeedback('correct'); addScore(10); setTimeout(generateLevel, 1500); } else { playSound('wrong'); setFeedback('wrong'); setTimeout(() => setFeedback(null), 1000); } };
   if (!level) return <div>Loading...</div>;
   return (
-    <div className="flex flex-col items-center h-full max-w-2xl mx-auto pt-4 px-4">
+    <div className="flex flex-col items-center min-h-full max-w-2xl mx-auto pt-4 px-4">
       <div className="flex justify-between w-full items-center mb-6"><Button onClick={onBack} color="amber" className="!py-2 !px-4 text-sm"><ArrowLeft size={20} /> Menu</Button></div>
       <div className="bg-white rounded-3xl shadow-xl p-8 w-full border-b-8 border-amber-200 flex flex-col items-center relative overflow-hidden">
         {feedback === 'correct' && <><div className="absolute inset-0 bg-green-100/95 flex items-center justify-center z-20 flex-col animate-bounce-in text-center"><span className="text-6xl mb-2">😋</span><span className="text-3xl font-bold text-green-600">Ngon quá!</span></div><Fireworks /></>}
@@ -420,7 +413,7 @@ const LogicGame = ({ onBack, addScore }) => {
   const handleAnswer = (ans) => { if (feedback) return; if (ans === level.answer) { playSound('correct'); setFeedback('correct'); addScore(10); setTimeout(generateLevel, 1500); } else { playSound('wrong'); setFeedback('wrong'); setTimeout(() => setFeedback(null), 1000); } };
   if (!level) return <div>Loading...</div>;
   return (
-    <div className="flex flex-col items-center h-full max-w-2xl mx-auto pt-4 px-4">
+    <div className="flex flex-col items-center min-h-full max-w-2xl mx-auto pt-4 px-4">
       <div className="flex justify-between w-full items-center mb-6"><Button onClick={onBack} color="fuchsia" className="!py-2 !px-4 text-sm"><ArrowLeft size={20} /> Menu</Button></div>
       <div className="bg-white rounded-3xl shadow-xl p-8 w-full border-b-8 border-fuchsia-200 flex flex-col items-center relative overflow-hidden">
         {feedback === 'correct' && <><div className="absolute inset-0 bg-green-100/95 flex items-center justify-center z-20 flex-col animate-bounce-in text-center"><Check size={80} className="text-green-500 mb-4" /><span className="text-3xl font-bold text-green-600">Thông minh quá!</span></div><Fireworks /></>}
@@ -433,7 +426,6 @@ const LogicGame = ({ onBack, addScore }) => {
   );
 };
 
-// --- APP TỔNG THỂ (KHÔNG ĐỔI) ---
 const App = () => {
   const [currentScreen, setCurrentScreen] = useState('menu');
   const [totalScore, setTotalScore] = useState(0);
