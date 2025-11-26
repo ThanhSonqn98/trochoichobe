@@ -28,13 +28,13 @@ const playSound = (type) => {
   if (audioCtx.state === 'suspended') audioCtx.resume();
 
   if (type === 'correct') {
-    // Hợp âm C Major (Đô trưởng) vui tươi - Nghe như tiếng ăn xu trong game Mario
+    // Hợp âm C Major (Đô trưởng) vui tươi
     playTone(523.25, 'sine', 0.6, 0);    // C5
     playTone(659.25, 'sine', 0.6, 0.1);  // E5
     playTone(783.99, 'sine', 0.6, 0.2);  // G5
-    playTone(1046.50, 'triangle', 0.8, 0.3, 0.05); // C6 (cao vút)
+    playTone(1046.50, 'triangle', 0.8, 0.3, 0.05); // C6
   } else if (type === 'wrong') {
-    // Tiếng tụt mood (xuống tông)
+    // Tiếng tụt mood
     playTone(300, 'sawtooth', 0.3, 0, 0.05);
     playTone(200, 'sawtooth', 0.3, 0.15, 0.05);
   } else if (type === 'click') {
@@ -61,7 +61,7 @@ const Fireworks = () => {
     resize();
 
     const createParticle = (x, y, color) => {
-      const count = 30; // Số lượng hạt mỗi quả pháo
+      const count = 30;
       for (let i = 0; i < count; i++) {
         const angle = Math.random() * Math.PI * 2;
         const speed = Math.random() * 5 + 2;
@@ -76,27 +76,25 @@ const Fireworks = () => {
       }
     };
 
-    // Bắn pháo hoa tự động
     const launchFirework = () => {
       const x = Math.random() * canvas.width;
-      const y = Math.random() * canvas.height * 0.5; // Nổ ở nửa trên màn hình
+      const y = Math.random() * canvas.height * 0.5;
       const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
       const color = colors[Math.floor(Math.random() * colors.length)];
       createParticle(x, y, color);
     };
 
-    // Vòng lặp bắn pháo
     let timer = 0;
     const animate = () => {
       ctx.globalCompositeOperation = 'destination-out';
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'; // Tạo vệt mờ
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.globalCompositeOperation = 'lighter';
 
       particles.forEach((p, i) => {
         p.x += p.vx;
         p.y += p.vy;
-        p.vy += 0.05; // Trọng lực
+        p.vy += 0.05;
         p.alpha -= p.decay;
         
         ctx.beginPath();
@@ -109,13 +107,12 @@ const Fireworks = () => {
       });
 
       timer++;
-      if (timer % 20 === 0) launchFirework(); // Tần suất bắn
+      if (timer % 20 === 0) launchFirework();
 
       animationFrameId = requestAnimationFrame(animate);
     };
 
     animate();
-    // Bắn ngay phát đầu tiên cho hoành tráng
     launchFirework(); launchFirework(); launchFirework();
 
     return () => {
@@ -127,10 +124,11 @@ const Fireworks = () => {
   return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-50" />;
 };
 
-// --- CẤU HÌNH DỮ LIỆU (Giữ nguyên) ---
+// --- CẤU HÌNH DỮ LIỆU ---
+
 const vietnameseData = [
   { id: 1, word: 'C_n Mèo', answer: 'o', options: ['a', 'o', 'e'], image: '🐱', full: 'Con Mèo' },
-  { id: 2, word: 'Cái _ế', answer: 'G', options: ['Gh', 'G', 'K'], image: '🪑', full: 'Cái Ghế' },
+  { id: 2, word: 'Cái _ế', answer: 'Gh', options: ['Gh', 'G', 'K'], image: '🪑', full: 'Cái Ghế' },
   { id: 3, word: 'Quả _áo', answer: 'T', options: ['C', 'T', 'D'], image: '🍎', full: 'Quả Táo' },
   { id: 4, word: 'Con _à', answer: 'G', options: ['G', 'C', 'K'], image: '🐔', full: 'Con Gà' },
   { id: 5, word: 'Bông _oa', answer: 'H', options: ['H', 'K', 'M'], image: '🌸', full: 'Bông Hoa' },
@@ -138,17 +136,21 @@ const vietnameseData = [
   { id: 7, word: 'Con _á', answer: 'C', options: ['K', 'C', 'T'], image: '🐟', full: 'Con Cá' },
   { id: 8, word: 'Xe _ạp', answer: 'Đ', options: ['Đ', 'D', 'B'], image: '🚲', full: 'Xe Đạp' },
 ];
+
 const memoryIcons = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'];
+
 const shadowData = [
   { id: 1, img: '🐘', name: 'Con Voi' }, { id: 2, img: '🦒', name: 'Hươu Cao Cổ' },
   { id: 3, img: '🚁', name: 'Trực Thăng' }, { id: 4, img: '🍄', name: 'Cây Nấm' },
   { id: 5, img: '🦋', name: 'Con Bướm' }, { id: 6, img: '🦕', name: 'Khủng Long' },
 ];
+
 const shapeConfig = [
   { id: 'circle', name: 'Hình Tròn', icon: Circle }, { id: 'square', name: 'Hình Vuông', icon: Square },
   { id: 'triangle', name: 'Hình Tam Giác', icon: Triangle }, { id: 'star', name: 'Hình Ngôi Sao', icon: Star },
   { id: 'hexagon', name: 'Hình Lục Giác', icon: Hexagon },
 ];
+
 const colorConfig = [
   { id: 'red', name: 'Màu Đỏ', class: 'text-red-500 fill-red-500', hex: '#ef4444' },
   { id: 'blue', name: 'Màu Xanh Dương', class: 'text-blue-500 fill-blue-500', hex: '#3b82f6' },
@@ -157,18 +159,21 @@ const colorConfig = [
   { id: 'purple', name: 'Màu Tím', class: 'text-purple-500 fill-purple-500', hex: '#a855f7' },
   { id: 'orange', name: 'Màu Cam', class: 'text-orange-500 fill-orange-500', hex: '#f97316' },
 ];
+
 const sortingItems = [
   { item: '🍎', colorId: 'red' }, { item: '🍓', colorId: 'red' }, { item: '🌹', colorId: 'red' }, { item: '🚒', colorId: 'red' },
   { item: '🐳', colorId: 'blue' }, { item: '🧢', colorId: 'blue' }, { item: '🚙', colorId: 'blue' }, { item: '💎', colorId: 'blue' },
   { item: '🐸', colorId: 'green' }, { item: '🥦', colorId: 'green' }, { item: '🍀', colorId: 'green' }, { item: '🐢', colorId: 'green' },
   { item: '🌻', colorId: 'yellow' }, { item: '🍌', colorId: 'yellow' }, { item: '🍋', colorId: 'yellow' }, { item: '🐤', colorId: 'yellow' },
 ];
+
 const shapes3D = [
   { id: 'sphere', name: 'Hình Cầu', items: ['⚽', '🏀', '🍊', '🌍', '🎱'], desc: 'Tròn vo như quả bóng' },
   { id: 'cube', name: 'Hình Lập Phương', items: ['📦', '🎁', '🎲', '🧊', '🟫'], desc: 'Vuông vắn như hộp quà' },
   { id: 'cylinder', name: 'Hình Trụ', items: ['🥤', '🛢️', '🔋', '🕯️', '🧴'], desc: 'Dài dài như lon nước' },
   { id: 'cone', name: 'Hình Nón', items: ['🍦', '🎉', '🎄', '🥕'], desc: 'Nhọn nhọn như nón sinh nhật' },
 ];
+
 const basicShapesData = [
   { id: 'circle', name: 'Hình Tròn', icon: Circle, color: 'text-red-500' },
   { id: 'square', name: 'Hình Vuông', icon: Square, color: 'text-blue-500' },
@@ -176,6 +181,7 @@ const basicShapesData = [
   { id: 'rectangle', name: 'Hình Chữ Nhật', icon: CreditCard, color: 'text-orange-500' },
   { id: 'cylinder', name: 'Hình Trụ', icon: Database, color: 'text-purple-500' },
 ];
+
 const feedingData = [
   { id: 1, animal: '🐰', food: '🥕', wrong: ['🦴', '🍌', '🐟'], name: 'Bạn Thỏ' },
   { id: 2, animal: '🐵', food: '🍌', wrong: ['🐟', '🧀', '🥕'], name: 'Bạn Khỉ' },
@@ -184,6 +190,7 @@ const feedingData = [
   { id: 5, animal: '🐮', food: '🌿', wrong: ['🐟', '🧀', '🦴'], name: 'Bạn Bò' },
   { id: 6, animal: '🐭', food: '🧀', wrong: ['🌿', '🥕', '🐟'], name: 'Bạn Chuột' },
 ];
+
 const logicData = [
   { id: 1, sequence: ['🔴', '🔵', '🔴', '🔵', '🔴'], answer: '🔵', options: ['🔵', '🔴', '🟢'] },
   { id: 2, sequence: ['🍎', '🍌', '🍎', '🍌', '🍎'], answer: '🍌', options: ['🍇', '🍌', '🍎'] },
@@ -245,7 +252,7 @@ const MainMenu = ({ onSelectGame }) => (
   </div>
 );
 
-// --- GAME COMPONENTS (Đã tích hợp pháo hoa & âm thanh) ---
+// --- GAME COMPONENTS ---
 
 const MathGame = ({ onBack, addScore }) => {
   const [question, setQuestion] = useState(null);
